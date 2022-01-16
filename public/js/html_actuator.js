@@ -1,7 +1,7 @@
 function HTMLActuator() {
-  this.tileContainer    = document.querySelector(".tile-container");
-  this.scoreContainer   = document.querySelector(".score-container");
-  this.bestContainer    = document.querySelector(".best-container");
+  this.tileContainer = document.querySelector(".tile-container");
+  this.scoreContainer = document.querySelector(".score-container");
+  this.bestContainer = document.querySelector(".best-container");
   this.messageContainer = document.querySelector(".game-message");
 
   this.score = 0;
@@ -31,7 +31,6 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
         self.message(true); // You win!
       }
     }
-
   });
 };
 
@@ -49,9 +48,9 @@ HTMLActuator.prototype.clearContainer = function (container) {
 HTMLActuator.prototype.addTile = function (tile) {
   var self = this;
 
-  var wrapper   = document.createElement("div");
-  var inner     = document.createElement("div");
-  var position  = tile.previousPosition || { x: tile.x, y: tile.y };
+  var wrapper = document.createElement("div");
+  var inner = document.createElement("div");
+  var position = tile.previousPosition || { x: tile.x, y: tile.y };
   var positionClass = this.positionClass(position);
 
   // We can't use classlist because it somehow glitches when replacing classes
@@ -125,11 +124,129 @@ HTMLActuator.prototype.updateBestScore = function (bestScore) {
 };
 
 HTMLActuator.prototype.message = function (won) {
-  var type    = won ? "game-won" : "game-over";
+  var type = won ? "game-won" : "game-over";
   var message = won ? "You win!" : "Game over!";
+  if (!won) {
+    $("#transaction-url").css("display", "hide");
+    let user = Moralis.User.current();
+    if (user) {
+      const currentScore = this.score;
+      console.log("this ran");
+      let node = document.getElementById("game-container-id");
+      this.count = 2;
+      domtoimage.toBlob(node).then(function (blob) {
+        var file = new File([blob], "name1.png", {
+          type: "image/png",
+          lastModified: new Date(),
+          size: 2,
+        });
+        const form = new FormData();
+        form.append("file", file);
+        const options = {
+          method: "POST",
+          body: form,
+          headers: {
+            Authorization: "663481f7-d211-4d3d-9c88-94abc311e59f",
+          },
+        };
+        fetch("https://api.nftport.xyz/v0/files", options)
+          .then((response) => {
+            console.log(response);
+            return response.json();
+          })
+          .then((responseJson) => {
+            if (responseJson.ipfs_url) {
+              const metadata = {
+                name: "Game Card",
+                description: "A game of 2048",
+                image: responseJson.ipfs_url,
+                attributes: [
+                  {
+                    display_type: "date",
+                    trait_type: "created",
+                    value: new Date().getTime(),
+                  },
+                  {
+                    display_typ: "number",
+                    trait_type: "Score",
+                    value: currentScore,
+                  },
+                ],
+              };
+              // NFTStorage = (await import("")).default
+              const str = JSON.stringify(metadata);
+              const bytes = new TextEncoder().encode(str);
+              const blob = new Blob([bytes], {
+                type: "application/json;charset=utf-8",
+              });
+              var metadataFile = new File([blob], "metadata.json", {
+                type: "application/json",
+                size: 2,
+              });
+              console.log(metadataFile);
+              const form = new FormData();
+              form.append("file", metadataFile);
+              const apiKey =
+                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDJmODkxMmM5NmEwNzRDZkE5OTFDMmVBREQ4Q0VkOTk2RTdDMDdjYjIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY0MjI4MzA5MDA3NCwibmFtZSI6Ik5GVCBHYW1lIENhcmQifQ.YJiXkpS--mDOZfJg9MjmBD-n5ZnwwSD6ifY8M6L97Js";
+              const options = {
+                method: "POST",
+                body: form,
+                headers: {
+                  Authorization: apiKey,
+                },
+              };
+              fetch("https://api.nft.storage/upload", options)
+                .then((response) => {
+                  console.log(response);
+                  return response.json();
+                })
+                .then((responseJson) => {
+                  if (responseJson.ok) {
+                    let mintToAddress = user.get("ethAddress");
+                    const metadataUri = `https://ipfs.io/ipfs/${responseJson.value.cid}/metadata.json`;
+                    const settings = {
+                      async: false,
+                      crossDomain: true,
+                      url: "https://api.nftport.xyz/v0/mints/customizable",
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "663481f7-d211-4d3d-9c88-94abc311e59f",
+                      },
+                      processData: false,
+                      data:
+                        '{\n  "chain": "polygon",\n  "contract_address": "0xDf7661ba0EbE19Bc58a74357456f0724aA97eD8e",\n  "metadata_uri": "' +
+                        metadataUri +
+                        '",\n  "mint_to_address": "' +
+                        mintToAddress +
+                        '"\n}',
+                    };
 
-  this.messageContainer.classList.add(type);
-  this.messageContainer.getElementsByTagName("p")[0].textContent = message;
+                    $.ajax(settings).done(function (response) {
+                      console.log(response);
+                      if (response.transaction_external_url) {
+                        $("#container-card").css("display", "block");
+                        $("#transaction-url").css("display", "block");
+                        $("#transaction-url").attr(
+                          "href",
+                          response.transaction_external_url
+                        );
+                      }
+                    });
+                  }
+                  console.log(responseJson);
+                });
+            }
+            // Handle the response
+            console.log(responseJson);
+          });
+      });
+    }
+  }
+  setTimeout(() => {
+    this.messageContainer.classList.add(type);
+    this.messageContainer.getElementsByTagName("p")[0].textContent = message;
+  }, 5000);
 };
 
 HTMLActuator.prototype.clearMessage = function () {
