@@ -69,10 +69,8 @@ router.route("/check/:player_address").get(async (req, res) => {
         res.json(false);
       }
     }
-    res.json(false);
   } catch (error) {
     console.log(error);
-    res.json(false);
   }
 });
 
