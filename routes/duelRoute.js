@@ -142,7 +142,12 @@ router.route("/").get(async (req, res) => {
       console.log(nftTokenData1);
       let nftTokenData2 = await axios.get(url2);
       nftTokenData2 = await nftTokenData2.data;
-      if (nftTokenData1 && nftTokenData2) {
+      if (
+        nftTokenData1 &&
+        nftTokenData2 &&
+        nftTokenData1.data &&
+        nftTokenData2.data
+      ) {
         const nftScore1 =
           nftTokenData1.data.items[0].nft_data[0].external_data.attributes[1]
             .value;
