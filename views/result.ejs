@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>NFT Game Cards</title>
+
+  <script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"
+></script>
+  <link href="style/main.css" rel="stylesheet" type="text/css">
+  <link rel="shortcut icon" href="favicon.ico">
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+
+  <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
+  
+  <script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+  crossorigin="anonymous"
+></script>
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+  crossorigin="anonymous"
+/>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport"
+    content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+
+<body>
+  <div class="container">
+    <h2 class="title">Duel Start</h2>
+  </div>
+  <br>
+
+  <br>
+  <div class="container">
+    <div className="form-floating my-2" >
+      <input autocomplete="off" className="form-control" id="userId" readonly name="userId" ></input>  
+      <label for="userId">Connected Wallet</label>
+    </div>
+    <div class="heading">
+      <div style="float: right; border-radius: 50%; margin-right:60px; " ><button class="btn btn-success" id="btn-login">Moralis Metamask Login</button>
+        <button class="btn btn-warning" style="display:none;" id="btn-logout">Logout</button></div>
+    </div>
+    
+    <br><br>
+    <strong> Click on the below button to check the Results of the duel </strong>
+    <div class="form form-input card container-card">
+        <div>
+            <button id="btn-result" type="submit">Check Result</button>
+        </div>
+    </div><br><br>
+    <div class="container card" style="display:block" id="container-card">
+      You can fetch the NFT token ID from your opensea collection  
+      <a id="opensea-url" href="https://opensea.io/collection/nft-game-card" target="_blank"> NFT Game Card Collection on Opensea</a>
+    </div>
+    </p>
+  </div>
+  <script src="moralis-connection.js"></script>
+  <script src="result-duel.js"></script>
+</body>
+
+</html>
