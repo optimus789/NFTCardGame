@@ -7,6 +7,7 @@ const cors = require('cors');
 
 require('dotenv').config();
 const port = process.env.APP_PORT || 8080;
+const host = process.env.APP_HOST || '0.0.0.0';
 
 const moralisServerUrl = process.env.MORALIS_SERVER_URL;
 const moralisAppKey = process.env.MORALIS_APP_KEY;
@@ -17,8 +18,8 @@ app.use(express.json());
 app.use(fileUpload());
 app.use(express.static('public'));
 
-const server = app.listen(port, () => {
-  console.log(`server is listening on Port  ${port}`);
+const server = app.listen(port, host, () => {
+  console.log(`server is listening on Port  ${port} and on host ${host}`);
 });
 
 var testAPIRouter = require('./routes/api_status');
