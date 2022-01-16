@@ -6,7 +6,7 @@ const path = require('path');
 const cors = require('cors');
 
 require('dotenv').config();
-const port = process.env.APP_PORT || 8080;
+const port = process.env.APP_PORT || 5000;
 const host = process.env.APP_HOST || '0.0.0.0';
 
 const moralisServerUrl = process.env.MORALIS_SERVER_URL;
