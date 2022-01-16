@@ -21,12 +21,9 @@ const server = app.listen(port, () => {
   console.log(`server is listening on Port  ${port}`);
 });
 
-// const trackRouter = require('./routes/track');
+var testAPIRouter = require('./routes/api_status');
+const nftRouter = require('./routes/nftRoutes');
 
-// var testAPIRouter = require('./routes/api_status');
-// const nftRouter = require('./routes/nftRoutes');
-
-app.use('/track', trackRouter);
 app.use('/nft', nftRouter);
 
 app.use('/status-api', testAPIRouter);
@@ -43,10 +40,6 @@ app.get('/some_route', (req, res) => {
 
 app.get("/", (req, res) => {
   res.render("home", { moralisAppKey, moralisServerUrl });
-});
-
-app.get('/login', (req, res) => {
-  res.render('storefront');
 });
 
 app.get('/profile', (req, res) => {

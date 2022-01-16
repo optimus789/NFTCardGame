@@ -30,18 +30,35 @@ async function login() {
   let user = Moralis.User.current();
   if (!user) {
     try {
-      user = await Moralis.authenticate({ signingMessage: "Hello World!" });
-      console.log(user);
+      user = await Moralis.authenticate({ signingMessage: "Welcome to NFT Game Cards" });
       console.log(user.get("ethAddress"));
-      $('#userId').val(user.get("ethAddress"));
+      $("#userId").val(user.get("ethAddress"));
+      $("#btn-login").hide();
+      $("#btn-logout").show();
     } catch (error) {
       console.log(error);
     }
   }
 }
 
+$(document).ready(function () {
+  let user = Moralis.User.current();
+  if (user) {
+    $("#userId").val(user.get("ethAddress"));
+    $("#btn-login").hide();
+    $("#btn-logout").css("display", "block");
+  }
+});
+
 async function logOut() {
   await Moralis.User.logOut();
+  $("#btn-login").show();
+  $("#btn-logout").hide();
+ 
+  window.dispatchEvent(new KeyboardEvent('keydown', {
+    'key': 'r'
+  }));
+  
   console.log("logged out");
 }
 
