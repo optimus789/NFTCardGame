@@ -12,3 +12,6 @@
 ```
 
 ###  In this game main focus is creating your nft game cards by playing the 2048 game and scoring as high as possible. Then you can duel with other players for a staking amount which you would get doubled if your nft game card has higher scores than your opponent.
+
+
+Showcase link for the project in EthGlobal NFTHack 2022 hackathon:  https://showcase.ethglobal.com/nfthack2022/nft-game-card
